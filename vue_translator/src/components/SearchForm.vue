@@ -26,7 +26,7 @@
         },
         methods: {
             TranslateIt() {
-  
+
                 let baseurl = "https://translate.yandex.net/api/v1.5/tr.json/translate";
                 let key =
                     "key=trnsl.1.1.20191101T122016Z.d309aa15307d111a.bbc09a62db05a128902be1154370f270289d4294";
@@ -38,8 +38,18 @@
                 axios
                     .get(requestUrl)
                     .then(res => {
-                        console.log(res.data.text[0]);
-                        this.$emit("OnTranslated",res.data.text[0]);
+
+                        let fromLangKey = res.data.lang.split('-')[0];
+                        let toLangKey = res.data.lang.split('-')[1];
+
+                        let translateClass = {
+                            fromLang: this.languages[fromLangKey],
+                            toLang: this.languages[toLangKey],
+                            fromText: this.searchText,
+                            toText: res.data.text[0]
+                        }
+
+                        this.$emit("OnTranslated", translateClass);
                     })
                     .catch(err => {
                         console.log(err);
